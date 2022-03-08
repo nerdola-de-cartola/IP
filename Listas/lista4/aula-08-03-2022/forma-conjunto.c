@@ -1,40 +1,49 @@
 #include <stdio.h>
+#include <stdbool.h>
 
-int contaRepeticoes(int num, int vet[], int tamanho_vet);
+bool aparece(int num, int vet[], int tamanho_vet);
 int conta(int num, int vet[], int tamanho_vet);
 
 int main(void) {
     int i, j;
-    int num, tamanho, qtd_numeros_unicos, repeticoes;
+    int num;
+    int tamanho;
+    int qtd_numeros_unicos;
     int conjunto[5000] = {0};
 
     scanf("%d", &tamanho);
 
     for(i = 0, j = 0; i < tamanho; i++) {
         scanf("%d", &num);
-        repeticoes = contaRepeticoes(num, conjunto, j);
 
-        if(repeticoes == 0) {
+        //Se o número ainda não existe no vetor, coloca ele
+        if(!aparece(num, conjunto, j)) {
             conjunto[j] = num;
             j++;
             qtd_numeros_unicos++;
-        } else if (repeticoes == 1) {
+        } else {
             qtd_numeros_unicos--;
         }
     }
 
     printf("%d\n", qtd_numeros_unicos);
 
+    for(i = 0; i < j; i++) {
+        printf("%d ", conjunto[i]);
+    }
+
+    printf("\n");
+
     return 0;
 }
 
 //Retorna true se um numero está presente em um array e false em caso contrário
-int contaRepeticoes(int num, int vet[], int tamanho_vet) {
-    int i, repeticoes;
+bool aparece(int num, int vet[], int tamanho_vet) {
+    int i;
 
     for(i = 0; i < tamanho_vet; i++) {
-        if(vet[i] == num) repeticoes++;
+        if(vet[i] == num) return true;
     }
 
-    return repeticoes;
+    return false;
 }

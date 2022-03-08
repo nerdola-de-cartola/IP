@@ -4,13 +4,12 @@ int qtdItensIguais(int loteria[], int apostas[]);
 
 int main(void) {
     int i, j;
-    int qtd_apostas;
-    int acertos;
-    int numeros_sorteados[6];
-    int apostas[50000][6];
+    int qtd_apostas, acertos;
     int ganhadores_sena = 0;
     int ganhadores_quina = 0;
     int ganhadores_quadra = 0;
+    int numeros_sorteados[6];
+    int apostas[50000][6];
 
     for(i = 0; i < 6; i++) {
         scanf("%d", &numeros_sorteados[i]);

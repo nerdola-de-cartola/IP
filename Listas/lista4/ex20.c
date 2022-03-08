@@ -1,16 +1,16 @@
 #include <stdio.h>
 
 int main(void) {
-    int i, j;
-    int posicao_maior;
-    int qtd_testes = 0;
-    int total_de_caracteres = 1;
-    int caracteres_do_premio = 1;
-    int limite_inferior;
-    int limite_superior;
+    int i, j, qtd_testes, posicao_maior;
+    int total_de_caracteres, caracteres_do_premio;
+    int limite_inferior, limite_superior;
     char entrada, maior;
     char str[10000];
     char str_apagada[10000];
+
+    qtd_testes = 0;
+    total_de_caracteres = 1;
+    caracteres_do_premio = 1;
 
     while(total_de_caracteres != 0 && caracteres_do_premio != 0) {
         scanf("%d %d", &total_de_caracteres, &caracteres_do_premio);

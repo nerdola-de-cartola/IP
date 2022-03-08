@@ -4,7 +4,7 @@ double maiorElementoAbsoluto(double arr[], int tamanho);
 void calculaVetores(double pontos[][3], double vetores[][3], int numero_de_pontos);
 double absoluto(double num);
 
-int main(void) {
+void main(void) {
     int i;
     int numero_de_pontos;
     double pontos[1000][3];
