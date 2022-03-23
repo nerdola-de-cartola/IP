@@ -1,7 +1,8 @@
 ### Folders ###
 */bin/
 */*/bin/
-.vscode/
+*.vscode/
+*.idea/
 
 ### C ###
 # Prerequisites
