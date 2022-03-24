@@ -72,7 +72,6 @@ int contaLeds(char numero[]) {
             case '9':
                 leds += 6;
                 break;
-            
         }
 
         i++;

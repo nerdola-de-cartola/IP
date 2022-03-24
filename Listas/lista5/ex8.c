@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
     
-bool ehPermutacao(int **matriz, int tamanho, int * soma);
+bool ehPermutacao(int ** matriz, int tamanho, int * soma);
     
 int main(void) {
     int tamanho, soma;
@@ -40,7 +40,7 @@ int main(void) {
     return 0;
 }
     
-bool ehPermutacao(int **matriz, int tamanho, int * soma) {
+bool ehPermutacao(int ** matriz, int tamanho, int * soma) {
     int i, j, contador;
     bool permutacao = true;
 
