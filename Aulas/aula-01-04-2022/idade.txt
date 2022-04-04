@@ -1,0 +1,3 @@
+Idade 1: 14
+Idade2: 21
+Media: 17.000000
