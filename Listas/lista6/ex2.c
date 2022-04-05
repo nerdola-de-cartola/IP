@@ -46,7 +46,7 @@ int main(void) {
         for(i = 0; i < qtd_compras; i++) {
             for(j = 0; j < qtd_produtos; j++) {
                 if(strcmp(lista[i].nome, ofertas[j].nome) == 0) {
-                    total += ofertas[j].preco * lista[i].quantidade;
+                    total += lista[i].quantidade * ofertas[j].preco; 
                     break;
                 }
             }

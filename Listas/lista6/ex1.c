@@ -16,7 +16,7 @@ int main(void) {
     double f1, f2;
 
     scanf("%d", &total_testes);
-    v = (struct Fracao **) malloc(total_testes * sizeof (struct Fracao *)); 
+    v = (struct Fracao **) malloc(total_testes * sizeof (struct Fracao *));
     qtd_fracoes = (int *) malloc(total_testes * sizeof (int));
 
     for(teste = 0; teste < total_testes; teste++) {
