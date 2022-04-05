@@ -1,23 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 struct termoDoPolinomio {
-    float coeficiente;
+    double coeficiente;
     int expoente;
 };
 
-void printPolinomio(struct termoDoPolinomio * p, int tamanho);
-struct termoDoPolinomio * lePolinomio(int * tamanho);
-void ordenaPolinomio(struct termoDoPolinomio * p, int tamanho);
-struct termoDoPolinomio * somaPolinomios(struct termoDoPolinomio * p1, struct termoDoPolinomio * p2, int tamanho1, int tamanho2, int * tamanho_final);
-struct termoDoPolinomio * subtraiPolinomios(struct termoDoPolinomio * p1, struct termoDoPolinomio * p2, int tamanho1, int tamanho2, int * tamanho_final);
+typedef struct termoDoPolinomio Pol;
+
+void printPolinomio(Pol * p, int tamanho);
+Pol * lePolinomio(int * tamanho);
+void ordenaPolinomio(Pol * p, int tamanho);
+Pol * somaPolinomios(Pol * p1, Pol * p2, int tamanho1, int tamanho2, int * tamanho_final);
+Pol * subtraiPolinomios(Pol * p1, Pol * p2, int tamanho1, int tamanho2, int * tamanho_final);
 
 int main(void) {
     int i, qtd_termos1, qtd_termos2, qtd_termos_final, teste, qtd_testes;
     char sinal;
-    struct termoDoPolinomio * polinomio1 = NULL;
-    struct termoDoPolinomio * polinomio2 = NULL;
-    struct termoDoPolinomio * polinomio_final = NULL;
+    Pol * polinomio1 = NULL;
+    Pol * polinomio2 = NULL;
+    Pol * polinomio_final = NULL;
 
     scanf("%d%*c", &qtd_testes);
 
@@ -40,143 +43,126 @@ int main(void) {
         free(polinomio_final);
 
         teste++;
-        scanf("%*c");
     }
 
     return 0;
 
 }
 
-void printPolinomio(struct termoDoPolinomio * p, int tamanho) {
+void printPolinomio(Pol * p, int tamanho) {
     int i;
 
     for(i = 0; i < tamanho; i++) {
         if(p[i].coeficiente == 0) continue;
 
-        if(p[i].coeficiente > 0) printf("+");
-        printf("%.2f", p[i].coeficiente);
-        if(p[i].expoente != 0) printf("X∧%d", p[i].expoente);
+        if(p[i].expoente != 0) printf("%+.2lfX^%d", p[i].coeficiente, p[i].expoente);
+        else printf("%+.2lf", p[i].coeficiente);
     }
 
     printf("\n");
 }
 
-struct termoDoPolinomio * lePolinomio(int * tamanho) {
-    int i;
-    struct termoDoPolinomio * p;
+Pol * lePolinomio(int * tamanho) {
+    int i, j, k;
+    Pol * p = NULL;
+    Pol * np = NULL;
+    Pol tmp;
 
-    scanf("%d", tamanho); // Sinal e Qtd de termos do polinomio
-    p = calloc(*tamanho, sizeof (struct termoDoPolinomio));
+    scanf("%d%*c", tamanho); // Qtd de termos do polinomio
+    p = calloc(*tamanho, sizeof(Pol));
 
-    for(i = 0; i < *tamanho; i++) {
-        scanf("%f%d", &p[i].coeficiente, &p[i].expoente); // Coeficiente e expoente
+    for(i = 0, k = 0; i < *tamanho; i++) {
+        scanf("%lf%d%*c", &tmp.coeficiente, &tmp.expoente); // Coeficiente e expoente
+
+        for(j = 0; j < k; j++) {
+            if(p[j].expoente == tmp.expoente) {
+                p[j].coeficiente += tmp.coeficiente;
+                break;
+            }
+        }
+
+        if(j == k) {
+            p[k] = tmp;
+            k++;
+        }
     }
+
+    np = realloc(p, k*sizeof(Pol));
+    if(np != NULL) p = np;
+
+    *tamanho = k;
 
     return p;
 }
 
-void ordenaPolinomio(struct termoDoPolinomio * p, int tamanho) {
-    int i, j, indice_maior;
-    struct termoDoPolinomio tmp;
+void ordenaPolinomio(Pol * p, int tamanho) {
+    int i, j, maior;
+    Pol tmp;
 
     for(i = 0; i < tamanho-1; i++) {
-        indice_maior = i;
+        maior = i;
 
         for(j = i+1; j < tamanho; j++) {
-            if(p[j].expoente > p[indice_maior].expoente) indice_maior = j;
+            if(p[j].expoente > p[maior].expoente) maior = j;
         }
 
-        if(i != indice_maior) {
-            tmp.coeficiente = p[i].coeficiente;
-            tmp.expoente = p[i].expoente;
-
-            p[i].coeficiente = p[indice_maior].coeficiente;
-            p[i].expoente = p[indice_maior].expoente;
-
-            p[indice_maior].coeficiente = tmp.coeficiente;
-            p[indice_maior].expoente = tmp.expoente;
-
+        if(i != maior) {
+            tmp = p[i];
+            p[i] = p[maior];
+            p[maior] = tmp;
         }
     }
 }
 
-struct termoDoPolinomio * somaPolinomios(struct termoDoPolinomio * p1, struct termoDoPolinomio * p2, int tamanho1, int tamanho2, int * tamanho_final) {
-    int i, j, indice;
-    int tamanho = tamanho1 + tamanho2;
-    struct termoDoPolinomio * polinomio = NULL;
-    struct termoDoPolinomio * np = NULL;
+Pol * somaPolinomios(Pol * p1, Pol * p2, int tamanho1, int tamanho2, int * tamanho_final) {
+    Pol * polinomio = NULL;
+    Pol * np = NULL;
+    int tamanho;
+    int i, j;
+    bool unico;
 
-    polinomio = calloc(tamanho, sizeof (struct termoDoPolinomio));
+    polinomio = calloc(tamanho1 + tamanho2, sizeof (Pol));
 
-    indice = 0;
     for(i = 0; i < tamanho1; i++) {
-        polinomio[indice].coeficiente = p1[i].coeficiente; 
-        polinomio[indice].expoente = p1[i].expoente; 
-
-        for(j = 0; j < tamanho2; j++) {
-            if(p1[i].expoente == p2[j].expoente) {
-                polinomio[indice].coeficiente += p2[j].coeficiente;
-                tamanho--;
-            }
-        }
-        indice++;
+        polinomio[i] = p1[i];   
     }
+
+    tamanho = i;
 
     for(i = 0; i < tamanho2; i++) {
+        unico =  true;
+
         for(j = 0; j < tamanho1; j++) {
-            if(p2[i].expoente == p1[j].expoente) break;
+            if(polinomio[j].expoente == p2[i].expoente) {
+                polinomio[j].coeficiente += p2[i].coeficiente;
+                unico = false;
+            }
         }
 
-        if(j == tamanho1) {
-            polinomio[indice].coeficiente = p2[i].coeficiente;
-            polinomio[indice].expoente = p2[i].expoente;
-            indice++;
+        if(unico) {
+            polinomio[tamanho] = p2[i];
+            tamanho++;
         }
     }
 
-    np = realloc(polinomio, tamanho * sizeof (struct termoDoPolinomio));
+    np = realloc(polinomio, tamanho * sizeof (Pol));
     if(np != NULL) polinomio = np;
 
     *tamanho_final = tamanho;
     return polinomio;
 }
 
-struct termoDoPolinomio * subtraiPolinomios(struct termoDoPolinomio * p1, struct termoDoPolinomio * p2, int tamanho1, int tamanho2, int * tamanho_final) {
-    int i, j, indice;
-    int tamanho = tamanho1 + tamanho2;
-    struct termoDoPolinomio * polinomio = NULL;
-    struct termoDoPolinomio * np = NULL;
-
-    polinomio = calloc(tamanho, sizeof (struct termoDoPolinomio));
-
-    indice = 0;
-    for(i = 0; i < tamanho1; i++) {
-        polinomio[indice].coeficiente = p1[i].coeficiente; 
-        polinomio[indice].expoente = p1[i].expoente; 
-
-        for(j = 0; j < tamanho2; j++) {
-            if(p1[i].expoente == p2[j].expoente) {
-                polinomio[indice].coeficiente -= p2[j].coeficiente;
-                tamanho--;
-            }
-        }
-        indice++;
-    }
+Pol * subtraiPolinomios(Pol * p1, Pol * p2, int tamanho1, int tamanho2, int * tamanho_final) {
+    Pol * polinomio = NULL;
+    int tamanho;
+    int i;
 
     for(i = 0; i < tamanho2; i++) {
-        for(j = 0; j < tamanho1; j++) {
-            if(p2[i].expoente == p1[j].expoente) break;
-        }
-
-        if(j == tamanho1) {
-            polinomio[indice].coeficiente = p2[i].coeficiente;
-            polinomio[indice].expoente = p2[i].expoente;
-        }
+        p2[i].coeficiente *= -1;
     }
 
-    np = realloc(polinomio, tamanho * sizeof (struct termoDoPolinomio));
-    if(np != NULL) polinomio = np;
-
+    polinomio = somaPolinomios(p1, p2, tamanho1, tamanho2, &tamanho);
     *tamanho_final = tamanho;
+
     return polinomio;
 }
