@@ -99,10 +99,10 @@ void ordenaPolinomio(Pol * p, int tamanho) {
     int i, j, maior;
     Pol tmp;
 
-    for(i = 0; i < tamanho-1; i++) {
+    for(i = 0; i < tamanho - 1; i++) {
         maior = i;
 
-        for(j = i+1; j < tamanho; j++) {
+        for(j = i + 1; j < tamanho; j++) {
             if(p[j].expoente > p[maior].expoente) maior = j;
         }
 

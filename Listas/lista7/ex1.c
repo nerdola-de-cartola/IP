@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 int main(int argc, char ** argv) {
-    int i, a, b, maior, menor;
+    int i, a, b;
 
     if(argc != 3) {
         printf("Modo de uso: ./seq <numero inteiro> <numero inteiro>\n");
@@ -13,16 +13,15 @@ int main(int argc, char ** argv) {
     b = atoi(argv[2]);
 
     if(a < b) {
-        menor = a;
-        maior = b;
+        for(i = a; i <= b; i++) {
+            printf("%d ", i);
+        }
     } else {
-        menor = b;
-        maior = a;   
+        for(i = a; i >= b; i--) {
+            printf("%d ", i);
+        }
     }
     
-    for(i = menor; i <= maior; i++) {
-        printf("%d ", i);
-    }
 
     printf("\n");
 
