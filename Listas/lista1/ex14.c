@@ -1,4 +1,4 @@
-# include <stdio.h>
+#include <stdio.h>
 
 int imprimeOrdenado(int ordem, float a, float b, float c);
 
